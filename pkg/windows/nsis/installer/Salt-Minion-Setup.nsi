@@ -72,7 +72,7 @@ VIProductVersion "1.0.0.0"  # This actually updates File Version
 VIAddVersionKey FileVersion "1.0.0.0"  # This doesn't seem to do anything, but you'll get a warning without it
 VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
 VIAddVersionKey "LegalTrademarks" "${PRODUCT_NAME} is a trademark of ${PRODUCT_PUBLISHER}"
-VIAddVersionKey "LegalCopyright" "© ${PRODUCT_PUBLISHER}"
+VIAddVersionKey "LegalCopyright" "(c) ${PRODUCT_PUBLISHER}"
 VIAddVersionKey "FileDescription" "${PRODUCT_NAME} Installer"
 VIAddVersionKey "ProductVersion" "${PRODUCT_VERSION}"
 
@@ -767,7 +767,7 @@ Function .onInit
     InitPluginsDir
     Call parseInstallerCommandLineSwitches
 
-    # In silent mode the installer must close itself — SetAutoClose is the
+    # In silent mode the installer must close itself -- SetAutoClose is the
     # NSIS-native mechanism for this.  GUI mode leaves the Finish page visible.
     ${If} ${Silent}
         SetAutoClose true
@@ -1123,7 +1123,7 @@ Function .onInstSuccess
     ${EndIf}
 
     # If start-minion is 1, then start the service.
-    # SimpleSC::StartService polls the SCM directly inside the plugin DLL —
+    # SimpleSC::StartService polls the SCM directly inside the plugin DLL --
     # no child process, no pipe, no ShellExecuteEx.  It blocks the exec thread
     # until the service reaches RUNNING state (or the 30-second timeout).
     # This eliminates the cross-thread deadlock that the old Exec approach
@@ -1227,14 +1227,14 @@ Function ${un}uninstallSalt
         # Stop the service via SimpleSC.  wait_for_file_release=1 blocks until
         # ssm.exe (the service host) releases its file handle, so the binary
         # can be deleted afterward.  timeout=30 seconds.  Runs entirely inside
-        # the plugin DLL — no child process, no pipe, no handle inheritance.
+        # the plugin DLL -- no child process, no pipe, no handle inheritance.
         ${LogMsg} "Stopping salt-minion service"
         SimpleSC::StopService "salt-minion" 1 30
         Pop $0
         ${If} $0 == 0
             ${LogMsg} "Success"
         ${Else}
-            ${LogMsg} "Stop returned error $0 (service may not have been running) — continuing"
+            ${LogMsg} "Stop returned error $0 (service may not have been running) -- continuing"
         ${EndIf}
 
         # Remove the service registration.  SimpleSC::RemoveService does not
@@ -1245,7 +1245,7 @@ Function ${un}uninstallSalt
         ${If} $0 == 0
             ${LogMsg} "Success"
         ${Else}
-            ${LogMsg} "Remove returned error $0 — continuing cleanup"
+            ${LogMsg} "Remove returned error $0 -- continuing cleanup"
         ${EndIf}
 
         # Belt-and-suspenders: taskkill is a no-op if the processes are
@@ -1379,7 +1379,7 @@ Function ${un}uninstallSalt
     StrCpy $SysDrive "$0\"
     ${LogMsg} "SystemDrive: $SysDrive"
 
-    # Automatically close when finished — only in the uninstaller binary.
+    # Automatically close when finished -- only in the uninstaller binary.
     # In the installer context (upgrade path calling uninstallSalt from .onInit)
     # SetAutoClose must not fire here; it is already set in .onInit for silent mode.
     !ifdef __UNINSTALL__

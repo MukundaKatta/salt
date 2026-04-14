@@ -399,7 +399,8 @@ def test_pub_async_default_timeout(master_opts):
 
                 with patch.object(local_client, "_prep_pub", side_effect=mock_prep_pub):
                     # Call pub_async without specifying timeout
-                    local_client.pub_async("*", "test.ping")
+                    io_loop = tornado.ioloop.IOLoop()
+                    io_loop.run_sync(lambda: local_client.pub_async("*", "test.ping"))
 
                     # Verify _prep_pub was called with timeout=30
                     assert len(prep_pub_calls) == 1
@@ -446,7 +447,10 @@ def test_pub_async_explicit_timeout(master_opts):
 
                 with patch.object(local_client, "_prep_pub", side_effect=mock_prep_pub):
                     # Call pub_async with explicit timeout=30
-                    local_client.pub_async("*", "test.ping", timeout=30)
+                    io_loop = tornado.ioloop.IOLoop()
+                    io_loop.run_sync(
+                        lambda: local_client.pub_async("*", "test.ping", timeout=30)
+                    )
 
                     # Verify _prep_pub was called with timeout=30
                     assert len(prep_pub_calls) == 1
