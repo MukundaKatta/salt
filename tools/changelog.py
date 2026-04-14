@@ -150,7 +150,10 @@ def update_deb(ctx: Context, salt_version: Version, draft: bool = False):
         salt_version = _get_salt_version(ctx)
     changes = _get_pkg_changelog_contents(ctx, salt_version)
     formated = "\n".join(
-        [f"  {_.replace('-', '*', 1)}" if _.strip() else "" for _ in changes.split("\n")]
+        [
+            f"  {_.replace('-', '*', 1)}" if _.strip() else ""
+            for _ in changes.split("\n")
+        ]
     )
     dt = datetime.datetime.utcnow()
     date = dt.strftime("%a, %d %b %Y %H:%M:%S +0000")
