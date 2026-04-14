@@ -573,6 +573,7 @@ FunctionEnd
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION} (${BUILD_TYPE})"
 OutFile "${OutFile}"
 InstallDir "C:\Program Files\Salt Project\Salt"
+InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
 
@@ -779,7 +780,7 @@ Function .onInit
     ${LogMsg} "Looking for MSI installation"
     loop:
     System::Call 'MSI::MsiEnumRelatedProducts(t "${upgradecode}",i0,i r0,t.r1)i.r2'
-    ${If} $2 = 0
+    ${If} $2 == 0
         # Now $1 contains the product code
         ${LogMsg} product:$1
         push $R0
@@ -891,7 +892,7 @@ Function .onInit
 
         # Restore the original silent flag that uninstallSalt clobbered.
         Pop $R0
-       ${LogMsg} "Resetting silent setting to original"
+        ${LogMsg} "Resetting silent setting to original"
         # Set it back to Normal mode, if that's what it was before
         ${If} $R0 == 0
             SetSilent normal
@@ -1634,7 +1635,7 @@ Function Explode
             StrLen  $explStrLen $explString
         ${EndIf}
 
-        ${If} $explOffset = 0           # If the beginning of the line met and there is no separator,
+        ${If} $explOffset == 0           # If the beginning of the line met and there is no separator,
                                         # copying the rest of the string
             ${If} $explSeparator == ""  # Fix for the empty separator
                 IntOp   $explArrCount   $explArrCount - 1
