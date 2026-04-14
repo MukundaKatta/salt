@@ -1916,7 +1916,8 @@ repos:
     hooks:
       - id: enforce-tornado-imports
         name: Enforce Tornado Imports
-        entry: bash -c 'sed -i "s/salt\.ext\.tornado/tornado/g" "$@"' --
+        # Inhibited to prevent global rewrites
+        entry: echo "Inhibited enforce-tornado-imports"
         language: python
         always_run: true
         pass_filenames: false
