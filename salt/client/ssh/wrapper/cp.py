@@ -862,9 +862,11 @@ class SSHCpClient(salt.fileclient.FSClient):
     """
 
     def __init__(self, opts, shell, tgt):  # pylint: disable=W0231
-        salt.fileclient.FSClient.__init__(self, opts)  # pylint: disable=W0233
+        self.opts = copy.deepcopy(opts)
         self.shell = shell
         self.tgt = tgt
+        self.opts["cachedir"] = self.get_cachedir(master=True)
+        salt.fileclient.FSClient.__init__(self, self.opts)  # pylint: disable=W0233
         # Internally, we need to return master paths, but in the wrapper functions,
         # we usually want to return the effective path on the minion.
         # This client is used for a single execution, thus we can easily save
